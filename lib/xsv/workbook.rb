@@ -113,9 +113,9 @@ module Xsv
         a.name[/\d+/].to_i <=> b.name[/\d+/].to_i
       end.map do |entry|
         rel = @relationships.detect { |r| entry.name.end_with?(r[:Target]) && r[:Type].end_with?("worksheet") }
-        sheet_ids = @sheet_ids.detect { |i| i[:"r:id"] == rel[:Id] }
-        Xsv::Sheet.new(self, entry.get_input_stream, entry.size, sheet_ids)
-      end
+        sheet_ids = @sheet_ids.detect { |i| i[:"r:id"] == rel[:Id] } 
+        Xsv::Sheet.new(self, entry.get_input_stream, entry.size, sheet_ids) if !sheet_ids.nil?
+      end.find_all {|sheet| !sheet.nil?}
     end
 
     def fetch_sheet_ids
